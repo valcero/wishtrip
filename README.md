@@ -60,10 +60,16 @@ Once the deterministic engine generates a bulletproof, 100% physically possible 
 - The AI **does not** plan the trip. 
 - The AI **explains** the trip. It provides a conversational summary and daily themes, acting like a friendly travel agent handing over the final packet.
 
-## 10. Why This Hybrid Approach?
+## 10. Persistence Layer (Step 4)
+Because a real travel app must persist itineraries so they can be viewed and shared later, we implemented a full database layer for generated trips.
+- We added `Itinerary`, `ItineraryDay`, and `ItineraryActivity` models to Prisma.
+- The API saves the completely generated trip into the database using a transaction.
+- The frontend redirects users to `/itinerary/[id]` where the trip is retrieved and rendered.
+
+## 11. Why This Hybrid Approach?
 Using an LLM prompt to generate an itinerary directly often results in hallucinations, non-existent opening hours, and physically impossible travel schedules. This deterministic engine ensures 100% factual accuracy, reproducible results, and respects strict constraints. The AI layer on top provides the natural-language explanations, combining genuine software engineering reliability with modern AI user experience.
 
-## 13. Engineering Decisions & Trade-offs
+## 14. Engineering Decisions & Trade-offs
 
 ### Decision: Modular Deterministic Planner vs LLM
 - **Why**: To guarantee factual itineraries without hallucinated places or impossible overlapping times.

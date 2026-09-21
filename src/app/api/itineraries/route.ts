@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { tripRequestSchema } from '@/lib/schema';
 import { generateItinerary } from '@/lib/planner/engine';
 import { generateTripNarrative } from '@/lib/ai';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
   try {
@@ -14,16 +17,50 @@ export async function POST(req: Request) {
     // Pass the deterministic result to the AI for a conversational wrapper
     const narrative = await generateTripNarrative(validatedData, result.days);
 
-    // Return the structured JSON representing the complete itinerary + AI context
-    const responsePayload = {
-      trip: validatedData,
-      days: result.days,
-      assumptions: result.assumptions,
-      planningMetadata: result.planningMetadata,
-      aiNarrative: narrative
-    };
+    // Save to Database
+    const savedItinerary = await prisma.itinerary.create({
+      data: {
+        origin: validatedData.origin,
+        destination: validatedData.destination,
+        startDate: validatedData.startDate,
+        endDate: validatedData.endDate,
+        partySize: validatedData.partySize,
+        travellerType: validatedData.travellerType,
+        pace: validatedData.pace,
+        budget: validatedData.budget,
+        interests: validatedData.interests,
+        personalizedSummary: narrative.personalizedSummary,
+        days: {
+          create: result.days.map(day => {
+            const aiDay = narrative.dayNarratives.find(n => n.dayNumber === day.dayNumber);
+            return {
+              dayNumber: day.dayNumber,
+              date: day.date,
+              theme: aiDay?.theme,
+              description: aiDay?.description,
+              activities: {
+                create: day.activities.map(act => ({
+                  placeId: act.placeId,
+                  name: act.name,
+                  startTime: act.startTime,
+                  endTime: act.endTime,
+                  durationMinutes: act.durationMinutes,
+                  reason: act.reason,
+                  estimatedCost: act.estimatedCost,
+                  category: act.category
+                }))
+              }
+            };
+          })
+        }
+      }
+    });
 
-    return NextResponse.json(responsePayload);
+    // Return the ID so the frontend can redirect
+    return NextResponse.json({
+      success: true,
+      itineraryId: savedItinerary.id
+    });
 
   } catch (error: any) {
     if (error.name === 'ZodError') {

@@ -46,6 +46,7 @@ model Place {
   openingHours           PlaceOpeningHours[]
   interests              PlaceInterest[]
   travellerTypes         PlaceTravellerType[]
+  itineraryActivities    ItineraryActivity[]
 }
 
 model PlaceOpeningHours {
@@ -85,4 +86,60 @@ model PlaceTravellerType {
   travellerType   TravellerType @relation(fields: [travellerTypeId], references: [id])
 
   @@id([placeId, travellerTypeId])
+}
+
+// -----------------------------------------
+// STEP 4: Itinerary Persistence Models
+// -----------------------------------------
+
+model Itinerary {
+  id                  String         @id @default(uuid())
+  createdAt           DateTime       @default(now())
+  
+  // Trip Request parameters saved for context
+  origin              String
+  destination         String
+  startDate           String
+  endDate             String
+  partySize           Int
+  travellerType       String
+  pace                String
+  budget              String
+  interests           String[]
+
+  // AI Narrative
+  personalizedSummary String?
+
+  // Relationships
+  days                ItineraryDay[]
+}
+
+model ItineraryDay {
+  id          String              @id @default(uuid())
+  itineraryId String
+  itinerary   Itinerary           @relation(fields: [itineraryId], references: [id], onDelete: Cascade)
+  
+  dayNumber   Int
+  date        String
+  theme       String?
+  description String?
+
+  activities  ItineraryActivity[]
+}
+
+model ItineraryActivity {
+  id              String       @id @default(uuid())
+  dayId           String
+  day             ItineraryDay @relation(fields: [dayId], references: [id], onDelete: Cascade)
+  
+  placeId         String
+  place           Place        @relation(fields: [placeId], references: [id])
+  
+  name            String
+  startTime       String
+  endTime         String
+  durationMinutes Int
+  reason          String
+  estimatedCost   CostLevel
+  category        PlaceCategory
 }

@@ -4,9 +4,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { tripRequestSchema, TripRequest } from "@/lib/schema";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const [result, setResult] = useState<any>(null);
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,7 +33,6 @@ export default function Home() {
   const onSubmit = async (data: TripRequest) => {
     setLoading(true);
     setError(null);
-    setResult(null);
 
     try {
       const response = await fetch("/api/itineraries", {
@@ -46,10 +46,14 @@ export default function Home() {
       }
 
       const responseData = await response.json();
-      setResult(responseData);
+      
+      if (responseData.success && responseData.itineraryId) {
+        router.push(`/itinerary/${responseData.itineraryId}`);
+      } else {
+        throw new Error("Invalid response from server.");
+      }
     } catch (err: any) {
       setError(err.message || "Something went wrong.");
-    } finally {
       setLoading(false);
     }
   };
@@ -196,68 +200,6 @@ export default function Home() {
           </div>
         )}
 
-        {result && (
-          <div className="bg-white shadow-xl rounded-2xl p-8 border border-gray-100 mt-8 space-y-8">
-            
-            {/* Header & AI Summary */}
-            <div className="border-b pb-6">
-              <h2 className="text-3xl font-extrabold text-gray-900 mb-4">Your Personalized Itinerary</h2>
-              <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-md">
-                <h3 className="text-sm font-semibold text-blue-800 uppercase tracking-wider mb-2">Trip Overview</h3>
-                <p className="text-gray-700 italic">{result.aiNarrative?.personalizedSummary || "Enjoy your amazing trip!"}</p>
-              </div>
-            </div>
-
-            {/* Daily Schedule */}
-            <div className="space-y-10">
-              {result.days.map((day: any) => {
-                const narrative = result.aiNarrative?.dayNarratives.find((n: any) => n.dayNumber === day.dayNumber);
-                
-                return (
-                  <div key={day.dayNumber} className="relative">
-                    <div className="mb-4">
-                      <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                        <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">
-                          {day.dayNumber}
-                        </span>
-                        {narrative?.theme || `Day ${day.dayNumber}`}
-                      </h3>
-                      <p className="text-gray-600 mt-2 pl-10">{narrative?.description}</p>
-                      <p className="text-sm text-gray-400 pl-10 mt-1">{new Date(day.date).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                    </div>
-
-                    <div className="pl-10 space-y-4">
-                      {day.activities.map((activity: any, idx: number) => (
-                        <div key={idx} className="bg-gray-50 rounded-lg p-4 flex flex-col md:flex-row gap-4 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                          <div className="md:w-32 flex-shrink-0">
-                            <p className="text-blue-600 font-bold">{activity.startTime}</p>
-                            <p className="text-sm text-gray-500">{activity.durationMinutes} mins</p>
-                          </div>
-                          <div>
-                            <h4 className="font-semibold text-gray-900">{activity.name}</h4>
-                            <p className="text-sm text-gray-600 mt-1">{activity.reason}</p>
-                            <div className="flex gap-2 mt-2">
-                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
-                                {activity.category}
-                              </span>
-                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
-                                {activity.estimatedCost}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                      {day.activities.length === 0 && (
-                        <p className="text-gray-500 italic">No activities planned for this day. Relax and explore!</p>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-          </div>
-        )}
       </div>
     </main>
   );
