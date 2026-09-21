@@ -4,8 +4,8 @@ import ItineraryClientView from './ItineraryClientView';
 
 const prisma = new PrismaClient();
 
-export default async function ItineraryPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default async function ItineraryPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
 
   const itinerary = await prisma.itinerary.findUnique({
     where: { id },

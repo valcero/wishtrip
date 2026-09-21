@@ -176,6 +176,7 @@ async function main() {
         longitude: placeData.longitude,
         defaultDurationMinutes: placeData.defaultDurationMinutes,
         estimatedCost: placeData.estimatedCost,
+        imageUrl: placeData.imageUrl,
       },
     })
 
