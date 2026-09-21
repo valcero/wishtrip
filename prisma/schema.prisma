@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -15,17 +15,32 @@ model Destination {
   places   Place[]
 }
 
+enum PlaceCategory {
+  ATTRACTION
+  RESTAURANT
+  NATURE
+  SHOPPING
+  NIGHTLIFE
+}
+
+enum CostLevel {
+  FREE
+  BUDGET
+  MID_RANGE
+  PREMIUM
+}
+
 model Place {
   id                     String                 @id @default(uuid())
   destinationId          String
   destination            Destination            @relation(fields: [destinationId], references: [id])
   name                   String
   description            String
-  category               String // 'ATTRACTION', 'RESTAURANT', 'NATURE', 'SHOPPING'
+  category               PlaceCategory
   latitude               Float
   longitude              Float
   defaultDurationMinutes Int
-  estimatedCost          Int // 0 (Free), 1 (Budget), 2 (Mid-range), 3 (Premium)
+  estimatedCost          CostLevel
   url                    String?
   imageUrl               String?
   openingHours           PlaceOpeningHours[]

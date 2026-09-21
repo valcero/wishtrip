@@ -31,7 +31,7 @@ graph TD
 - **TypeScript** — Enforces type safety across API boundaries and planner logic.
 - **Tailwind CSS** — Allows rapid UI prototyping.
 - **Prisma** — Provides a type-safe ORM for relational data queries.
-- **SQLite (Step 1)** — Chosen for the prototype database to ensure it runs out-of-the-box locally without Docker/Postgres dependencies, while maintaining a relational structure that can easily be migrated to PostgreSQL.
+- **PostgreSQL** — Relational database providing strong schema enforcement and native Enums, running locally via Docker.
 - **Zod** — End-to-end type validation for both the frontend form and API inputs.
 
 ## 6. Data Model
@@ -47,11 +47,6 @@ graph TD
 
 ## Engineering Decisions & Trade-offs
 
-### Decision: SQLite instead of PostgreSQL for prototype
-- **Why**: SQLite requires zero configuration. A developer or interviewer can clone the repo, run `npm install` and `prisma db seed`, and immediately have a working relational database locally.
-- **Alternatives**: PostgreSQL via Docker or local installation.
-- **Trade-off**: Lacks some advanced features like native Enums or PostGIS, requiring workarounds (e.g., using Strings for Enums), but it is worth the frictionless setup for an interview prototype.
-
 ### Decision: Mocked API Response in Step 1
 - **Why**: To establish the API contract and verify end-to-end connectivity before writing complex planning logic.
 - **Alternatives**: Building the planner immediately.
@@ -63,7 +58,11 @@ graph TD
 ```bash
 npm install
 ```
-2. Initialize database and run seed script:
+2. Start the local PostgreSQL database using Docker:
+```bash
+docker-compose up -d
+```
+3. Initialize database and run seed script:
 ```bash
 npx prisma db push
 npx prisma generate
