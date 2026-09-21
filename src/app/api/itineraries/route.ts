@@ -1,23 +1,26 @@
 import { NextResponse } from 'next/server';
 import { tripRequestSchema } from '@/lib/schema';
 import { generateItinerary } from '@/lib/planner/engine';
+import { generateTripNarrative } from '@/lib/ai';
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    
-    // Validate request body
     const validatedData = tripRequestSchema.parse(body);
 
     // Generate itinerary using the deterministic planning engine
     const result = await generateItinerary(validatedData);
 
-    // Return the structured JSON representing the complete itinerary
+    // Pass the deterministic result to the AI for a conversational wrapper
+    const narrative = await generateTripNarrative(validatedData, result.days);
+
+    // Return the structured JSON representing the complete itinerary + AI context
     const responsePayload = {
       trip: validatedData,
       days: result.days,
       assumptions: result.assumptions,
-      planningMetadata: result.planningMetadata
+      planningMetadata: result.planningMetadata,
+      aiNarrative: narrative
     };
 
     return NextResponse.json(responsePayload);
