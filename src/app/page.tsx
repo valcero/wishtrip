@@ -198,7 +198,7 @@ export default function Home() {
 
         {result && (
           <div className="bg-white shadow-xl rounded-2xl p-8 border border-gray-100 mt-8">
-            <h2 className="text-2xl font-bold text-gray-900 border-b pb-4 mb-4">Your Itinerary (Step 1 Mock)</h2>
+            <h2 className="text-2xl font-bold text-gray-900 border-b pb-4 mb-4">Your Itinerary</h2>
             <pre className="bg-gray-50 p-4 rounded-md overflow-x-auto text-sm text-gray-700 border">
               {JSON.stringify(result, null, 2)}
             </pre>

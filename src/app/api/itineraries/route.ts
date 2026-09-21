@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { tripRequestSchema } from '@/lib/schema';
+import { generateItinerary } from '@/lib/planner/engine';
 
 export async function POST(req: Request) {
   try {
@@ -8,37 +9,18 @@ export async function POST(req: Request) {
     // Validate request body
     const validatedData = tripRequestSchema.parse(body);
 
-    // TODO (Step 2): Implement the actual deterministic planning engine here
-    // For Step 1, we return a mocked structured response that matches the required output
+    // Generate itinerary using the deterministic planning engine
+    const result = await generateItinerary(validatedData);
 
-    const mockResponse = {
+    // Return the structured JSON representing the complete itinerary
+    const responsePayload = {
       trip: validatedData,
-      days: [
-        {
-          date: validatedData.startDate,
-          dayNumber: 1,
-          activities: [
-            {
-              placeId: 'mock-place-id',
-              name: 'Senso-ji Temple',
-              startTime: '10:00',
-              endTime: '12:00',
-              durationMinutes: 120,
-              reason: 'Matches your interest in Culture.',
-              estimatedCost: 0,
-            }
-          ],
-          estimatedDailyCost: 0,
-        }
-      ],
-      assumptions: ['Assuming standard opening hours for now.'],
-      planningMetadata: {
-        candidatesConsidered: 10,
-        candidatesFiltered: 2,
-      }
+      days: result.days,
+      assumptions: result.assumptions,
+      planningMetadata: result.planningMetadata
     };
 
-    return NextResponse.json(mockResponse);
+    return NextResponse.json(responsePayload);
 
   } catch (error: any) {
     if (error.name === 'ZodError') {

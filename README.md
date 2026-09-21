@@ -47,10 +47,33 @@ graph TD
 
 ## Engineering Decisions & Trade-offs
 
+## 8. Planning Algorithm
+The core intelligence lives in `src/lib/planner` and operates deterministically in 4 stages:
+
+1. **Filtering (Hard Constraints)**: `candidate-filter.ts` drops any places that strictly violate the request (e.g. incompatible traveler type like 'Family' trying to go to a Solo-only bar, or strict Budget users seeing Premium places).
+2. **Scoring (Soft Constraints)**: `scorer.ts` evaluates remaining candidates. It adds points for matching interests (+5 per match), adjusts scores based on Budget (rewarding free things for budget travelers), and considers Pace (Packed pace prefers quick attractions; Easy-going prefers relaxing nature walks).
+3. **Daily Allocation**: `scheduler.ts` iterates day-by-day. It determines a maximum activity count based on the user's Pace (Packed = 5, Balanced = 4, Easy = 3). It iteratively attempts to fit the highest-scored candidates into the day.
+4. **Time & Constraint Validation**: `constraint-validator.ts` ensures no activities overlap in time, assumes 30 minutes of travel time between activities, and guarantees the place is actually open during the scheduled block on that specific day of the week.
+
+## 9. Why This Approach?
+Using an LLM prompt to generate an itinerary directly often results in hallucinations, non-existent opening hours, and physically impossible travel schedules. This deterministic engine ensures 100% factual accuracy, reproducible results, and respects strict constraints, providing genuine software engineering value. AI can be layered on top later purely for natural-language explanations.
+
+## 13. Engineering Decisions & Trade-offs
+
+### Decision: Modular Deterministic Planner vs LLM
+- **Why**: To guarantee factual itineraries without hallucinated places or impossible overlapping times.
+- **Alternatives**: Sending user preferences to OpenAI and rendering the response.
+- **Trade-off**: Requires a strictly curated, high-quality relational dataset and manual scoring weights, which takes more upfront engineering effort than a simple API call to an LLM.
+
+### Decision: Mocked Travel Times
+- **Why**: To keep the prototype focused on the allocation engine without needing a complex Google Maps API integration.
+- **Alternatives**: Real-time routing API.
+- **Trade-off**: Assumes a fixed 30-minute transit time between all places, which may be inaccurate in a large city like Tokyo.
+
 ### Decision: Mocked API Response in Step 1
 - **Why**: To establish the API contract and verify end-to-end connectivity before writing complex planning logic.
 - **Alternatives**: Building the planner immediately.
-- **Trade-off**: The app currently returns a static response regardless of input.
+- **Trade-off**: The app returned a static response initially. (Replaced in Step 2).
 
 ## Running Locally
 
@@ -67,6 +90,10 @@ docker-compose up -d
 npx prisma db push
 npx prisma generate
 npx prisma db seed
+```
+4. Run tests for the planner:
+```bash
+npm run test
 ```
 *(Note: If `npm run prisma:seed` fails, you can run `npx ts-node --compiler-options "{\"module\":\"CommonJS\"}" prisma/seed.ts`)*
 
