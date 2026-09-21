@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { tripRequestSchema, TripRequest } from "@/lib/schema";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Compass, Calendar, Users, Target, Banknote, Navigation } from "lucide-react";
+import { Compass } from "lucide-react";
 
 export default function Home() {
   const router = useRouter();
@@ -54,6 +54,7 @@ export default function Home() {
       } else {
         throw new Error("Invalid response from server.");
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message || "Something went wrong.");
       setLoading(false);

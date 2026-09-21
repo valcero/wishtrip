@@ -1,7 +1,7 @@
 import { TripRequest } from '@/lib/schema';
 import { ScoredCandidate, DayPlan, ScheduledActivity } from './types';
 import { hasTimeConflict, isOpenDuringTime, formatMinutesToTime } from './constraint-validator';
-import { PlaceCategory } from '@prisma/client';
+
 
 const START_OF_DAY_MINUTES = 9 * 60; // 09:00
 const END_OF_DAY_MINUTES = 21 * 60; // 21:00

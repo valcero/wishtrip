@@ -63,6 +63,7 @@ export async function POST(req: Request) {
       itineraryId: savedItinerary.id
     });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     if (error.name === 'ZodError') {
       return NextResponse.json({ error: 'Validation failed', details: error.errors }, { status: 400 });
