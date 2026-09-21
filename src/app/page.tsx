@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { tripRequestSchema, TripRequest } from "@/lib/schema";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { Compass, Calendar, Users, Target, Banknote, Navigation } from "lucide-react";
 
 export default function Home() {
   const router = useRouter();
@@ -59,14 +61,34 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 text-gray-900 p-8">
-      <div className="max-w-4xl mx-auto space-y-12">
+    <main className="min-h-screen bg-[url('https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&q=80')] bg-cover bg-center bg-fixed text-gray-900 p-8">
+      <div className="min-h-screen bg-black/30 fixed inset-0 z-0 backdrop-blur-sm"></div>
+      
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="max-w-4xl mx-auto space-y-12 relative z-10 pt-10"
+      >
         <header className="text-center">
-          <h1 className="text-4xl font-extrabold text-blue-600 tracking-tight">WishTrip Planner</h1>
-          <p className="text-gray-500 mt-2 text-lg">Intelligent itinerary generation for your next adventure.</p>
+          <motion.div
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", bounce: 0.5 }}
+            className="inline-block bg-white/20 p-4 rounded-full mb-4 backdrop-blur-md border border-white/30 shadow-xl"
+          >
+            <Compass className="w-12 h-12 text-white" />
+          </motion.div>
+          <h1 className="text-5xl font-extrabold text-white tracking-tight drop-shadow-lg">WishTrip Planner</h1>
+          <p className="text-white/90 mt-4 text-xl drop-shadow-md max-w-2xl mx-auto">Intelligent itinerary generation for your next adventure. Powered by AI and deterministic algorithms.</p>
         </header>
 
-        <div className="bg-white shadow-xl rounded-2xl p-8 border border-gray-100">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="bg-white/90 backdrop-blur-xl shadow-2xl rounded-3xl p-10 border border-white/50"
+        >
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Origin */}
@@ -192,7 +214,7 @@ export default function Home() {
               </button>
             </div>
           </form>
-        </div>
+        </motion.div>
 
         {error && (
           <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-md">
@@ -200,7 +222,7 @@ export default function Home() {
           </div>
         )}
 
-      </div>
+      </motion.div>
     </main>
   );
 }

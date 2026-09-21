@@ -15,6 +15,7 @@ export interface CandidatePlace {
     openTime: string;
     closeTime: string;
   }[];
+  imageUrl?: string | null;
 }
 
 export interface ScoredCandidate extends CandidatePlace {
@@ -31,6 +32,7 @@ export interface ScheduledActivity {
   reason: string;
   estimatedCost: CostLevel;
   category: PlaceCategory;
+  imageUrl?: string;
 }
 
 export interface DayPlan {

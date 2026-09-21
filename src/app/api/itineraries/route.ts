@@ -47,7 +47,8 @@ export async function POST(req: Request) {
                   durationMinutes: act.durationMinutes,
                   reason: act.reason,
                   estimatedCost: act.estimatedCost,
-                  category: act.category
+                  category: act.category,
+                  imageUrl: act.imageUrl
                 }))
               }
             };

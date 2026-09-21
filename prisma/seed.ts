@@ -62,6 +62,7 @@ async function main() {
     },
     {
       name: 'Tokyo Skytree',
+      imageUrl: 'https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?auto=format&fit=crop&q=80&w=1000',
       description: 'Iconic broadcasting and observation tower.',
       category: PlaceCategory.ATTRACTION,
       latitude: 35.7100,
@@ -74,6 +75,7 @@ async function main() {
     },
     {
       name: 'Shinjuku Gyoen National Garden',
+      imageUrl: 'https://images.unsplash.com/photo-1493780474015-ba834fd0ce2f?auto=format&fit=crop&q=80&w=1000',
       description: 'Spacious park with diverse gardens.',
       category: PlaceCategory.NATURE,
       latitude: 35.6852,
@@ -86,6 +88,7 @@ async function main() {
     },
     {
       name: 'Sukiyabashi Jiro',
+      imageUrl: 'https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&q=80&w=1000',
       description: 'World-famous sushi restaurant.',
       category: PlaceCategory.RESTAURANT,
       latitude: 35.6726,
@@ -98,6 +101,7 @@ async function main() {
     },
     {
       name: 'Ichiran Shibuya',
+      imageUrl: 'https://images.unsplash.com/photo-1552611052-33e04de081de?auto=format&fit=crop&q=80&w=1000',
       description: 'Famous tonkotsu ramen focused on solo dining.',
       category: PlaceCategory.RESTAURANT,
       latitude: 35.6617,
@@ -110,6 +114,7 @@ async function main() {
     },
     {
       name: 'Akihabara Electric Town',
+      imageUrl: 'https://images.unsplash.com/photo-1541359927273-d8c178ac9ad9?auto=format&fit=crop&q=80&w=1000',
       description: 'Hub for anime, manga, and electronics.',
       category: PlaceCategory.SHOPPING,
       latitude: 35.6983,
@@ -122,6 +127,7 @@ async function main() {
     },
     {
       name: 'Shibuya Crossing',
+      imageUrl: 'https://images.unsplash.com/photo-1542051812871-75f1067584cd?auto=format&fit=crop&q=80&w=1000',
       description: 'The famous scramble crossing.',
       category: PlaceCategory.ATTRACTION,
       latitude: 35.6595,
@@ -146,6 +152,7 @@ async function main() {
     },
     {
       name: 'Golden Gai',
+      imageUrl: 'https://images.unsplash.com/photo-1517457222165-27a9c7161b20?auto=format&fit=crop&q=80&w=1000',
       description: 'Small atmospheric bars in narrow alleys.',
       category: PlaceCategory.NIGHTLIFE,
       latitude: 35.6938,

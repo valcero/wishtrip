@@ -37,6 +37,7 @@ export async function generateItinerary(request: TripRequest): Promise<PlannerRe
     longitude: p.longitude,
     defaultDurationMinutes: p.defaultDurationMinutes,
     estimatedCost: p.estimatedCost,
+    imageUrl: p.imageUrl,
     interests: p.interests.map(i => i.interest.name),
     travellerTypes: p.travellerTypes.map(t => t.travellerType.name),
     openingHours: p.openingHours.map(oh => ({

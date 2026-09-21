@@ -58,7 +58,8 @@ export function buildItinerary(
           durationMinutes: duration,
           reason: candidate.matchReasons[0] || 'Highly rated for your profile.',
           estimatedCost: candidate.estimatedCost,
-          category: candidate.category
+          category: candidate.category,
+          imageUrl: candidate.imageUrl || undefined
         });
 
         visitedPlaceIds.add(candidate.id);

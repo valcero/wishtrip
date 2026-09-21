@@ -66,7 +66,13 @@ Because a real travel app must persist itineraries so they can be viewed and sha
 - The API saves the completely generated trip into the database using a transaction.
 - The frontend redirects users to `/itinerary/[id]` where the trip is retrieved and rendered.
 
-## 11. Why This Hybrid Approach?
+## 11. Premium UI Polish & Animations (Step 5)
+To elevate the prototype into a production-level experience, we added a layer of premium polish:
+- **Framer Motion**: Smooth entry animations, spring transitions, and staggered list effects were added to both the generator form and the itinerary view.
+- **Dynamic Visuals**: The deterministic engine was updated to pass real, high-quality Unsplash image URLs from the database down to the individual scheduled activities.
+- **Print View**: A custom `@media print` CSS utility allows users to hit a "Print" button that strips out backgrounds and UI elements, resulting in a clean, print-ready PDF itinerary.
+
+## 12. Why This Hybrid Approach?
 Using an LLM prompt to generate an itinerary directly often results in hallucinations, non-existent opening hours, and physically impossible travel schedules. This deterministic engine ensures 100% factual accuracy, reproducible results, and respects strict constraints. The AI layer on top provides the natural-language explanations, combining genuine software engineering reliability with modern AI user experience.
 
 ## 14. Engineering Decisions & Trade-offs

@@ -142,4 +142,5 @@ model ItineraryActivity {
   reason          String
   estimatedCost   CostLevel
   category        PlaceCategory
+  imageUrl        String?
 }
