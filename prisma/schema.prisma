@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Destination {
+  id       String  @id @default(uuid())
+  name     String
+  country  String
+  timezone String
+  places   Place[]
+}
+
+model Place {
+  id                     String                 @id @default(uuid())
+  destinationId          String
+  destination            Destination            @relation(fields: [destinationId], references: [id])
+  name                   String
+  description            String
+  category               String // 'ATTRACTION', 'RESTAURANT', 'NATURE', 'SHOPPING'
+  latitude               Float
+  longitude              Float
+  defaultDurationMinutes Int
+  estimatedCost          Int // 0 (Free), 1 (Budget), 2 (Mid-range), 3 (Premium)
+  url                    String?
+  imageUrl               String?
+  openingHours           PlaceOpeningHours[]
+  interests              PlaceInterest[]
+  travellerTypes         PlaceTravellerType[]
+}
+
+model PlaceOpeningHours {
+  id        String @id @default(uuid())
+  placeId   String
+  place     Place  @relation(fields: [placeId], references: [id])
+  dayOfWeek Int // 0 = Sunday, 1 = Monday, ... 6 = Saturday
+  openTime  String // "HH:MM"
+  closeTime String // "HH:MM"
+}
+
+model Interest {
+  id     String          @id @default(uuid())
+  name   String // "Food", "Culture", "Nature"
+  places PlaceInterest[]
+}
+
+model PlaceInterest {
+  placeId    String
+  interestId String
+  place      Place    @relation(fields: [placeId], references: [id])
+  interest   Interest @relation(fields: [interestId], references: [id])
+
+  @@id([placeId, interestId])
+}
+
+model TravellerType {
+  id     String               @id @default(uuid())
+  name   String // "Solo", "Couple", "Family", "Friends"
+  places PlaceTravellerType[]
+}
+
+model PlaceTravellerType {
+  placeId         String
+  travellerTypeId String
+  place           Place         @relation(fields: [placeId], references: [id])
+  travellerType   TravellerType @relation(fields: [travellerTypeId], references: [id])
+
+  @@id([placeId, travellerTypeId])
+}
